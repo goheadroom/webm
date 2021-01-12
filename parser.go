@@ -37,6 +37,16 @@ func (w *WebM) FindFirstAudioTrack() *TrackEntry {
 	return nil
 }
 
+func (w *WebM) FindFirstVttMetaDataTrack() *TrackEntry {
+	t := w.Segment.Tracks.TrackEntry
+	for i, l := 0, len(t); i < l; i++ {
+		if t[i].IsVttMetaData() {
+			return &t[i]
+		}
+	}
+	return nil
+}
+
 type Header struct {
 	EBMLVersion        uint   `ebml:"4286" ebmldef:"1"`
 	EBMLReadVersion    uint   `ebml:"42f7" ebmldef:"1"`
@@ -87,6 +97,10 @@ func (t *TrackEntry) IsVideo() bool {
 
 func (t *TrackEntry) IsAudio() bool {
 	return t.TrackType == 2
+}
+
+func (t *TrackEntry) IsVttMetaData() bool {
+	return t.TrackType == 0x21
 }
 
 type Video struct {
